@@ -1,17 +1,153 @@
-<html> <head><title>blog JS</title><meta charset="utf-8"/>
-<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" type="text/css" href="css/style3.css" >
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="text/javascript" src="http://js-tutorials.com/demos/read_csv_javascript_demo/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js" integrity="sha512-MGT8BGoc8L3124PwHEGTC+M8Hu9oIbZOg8ENcd92sQKKidWKOOOZ6bqQemqYAX0yXJUnovOkF4Hx9gc/5lVxPw==" crossorigin="anonymous"></script>
+<style>
+html{font-family: Verdana;background:url('https://images.pexels.com/photos/46792/the-ball-stadion-football-the-pitch-46792.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');}
+table{border:1px solid black;border-radius:0.5em;background: #E6E6E6;}
+td{border:1px solid black;background: #FFF;text-align: center;}
+.outerdiv1,.outerdiv2{background: #FFF;}
+</style>
 </head>
 
 <body>
-<div id="leftMenu"><a id="logo">vidualData</a><hr /><a id="goBack"></a><a id="footer"></a></div>
-<div id="articles"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
-<!--<script src="script.js"></script>-->
-<script src="router.js"></script>
-<script src="articles.json"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min.js"></script>
+<h1 style="text-align:center;">FootMercato Note match France-Croatie</h1>
+<h2 style="text-align:center;font-size:3em;margin:-0.5em 0 0 0;">Score finale: 2 - 1</h2>
+<div class="row" id="parsed_csv_list">
+</div>
+<div class="outerdiv1" style="width:45%;float:left;border:1px solid black;margin:1em 0 3em 0"><img src="https://flagpedia.net/data/flags/w580/mf.webp" style="width:10em;height:5em;margin:0 2em 0 5em"/><div id="statsE1" style="display:inline;"></div>
+	<canvas id="myChart1"></canvas>
+</div>
+<div class="outerdiv2" style="width:45%;float:left;border:1px solid black;margin:1em 0 3em 2em"><img src="https://flagpedia.net/data/flags/w580/hr.webp" style="width:10em;height:5em;margin:0 2em 0 5em"/><div id="statsE2" style="display:inline;"></div>
+	<canvas id="myChart2"></canvas>
+</div>
+  <script type="text/javascript">
+  $(document).ready(function(){	
+    //var results = Papa.parse("");
+    function getData(results) {
+    //Data is usable here
+    	console.log(results.data);
+    	displayHTMLTable(results);
+    	drawBarChartFrance(results);
+    	drawBarChartPortugal(results);
+	}
+
+	function parseData(url, callBack) {
+	    Papa.parse(url, {
+	        download: true,
+	        dynamicTyping: true,
+	        complete: function(results) {
+	            callBack(results);
+	        }
+	    });
+	}
+	parseData("./franceCroatieLeagueNation2020.csv", getData);
+		
+	function displayHTMLTable(results){
+		var table = "<table class='table'>";
+		var data = results.data;
+		 
+		for(i=0;i<data.length;i++){
+			table+= "<tr>";
+			var row = data[i];
+			var cells = row.join(",").split(",");
+			 
+			for(j=0;j<cells.length;j++){
+				table+= "<td>";
+				table+= cells[j];
+				table+= "</th>";
+			}
+			table+= "</tr>";
+		}
+		table+= "</table>";
+		$("#parsed_csv_list").html(table);
+		}
+	  });
+
+    function drawBarChartFrance(results){
+  	var ctx = document.getElementById('myChart1').getContext('2d');
+  	var listLabelsEquipe=[];var listValues=[];
+  	for(var it=1;it<results.data.length;it++){
+  		listLabelsEquipe.push(results.data[it][0])
+  	}
+  	for(var it=1;it<results.data.length;it++){
+  		listValues.push(results.data[it][1])
+  	}
+  	$('#statsE1').html('moyenne:'+jStat.mean(listValues).toFixed(1)+' - min:'+jStat.min(listValues));
+
+	var chart = new Chart(ctx, {
+	    // The type of chart we want to create
+	    type: 'horizontalBar',
+
+	    // The data for our dataset
+	    data: {
+	        labels: listLabelsEquipe,
+	        datasets: [{
+	            label: 'note de match',
+	            backgroundColor: '#81BEF7',
+	            borderColor: 'red',
+	            data: listValues
+	        }]
+	    },
+
+	    // Configuration options go here
+	    options: {
+	    	 scales: {
+		        xAxes: [{
+		            ticks: {
+		                beginAtZero: true
+		            }
+		        }]
+		    }
+	    }
+	});
+  }
+  function drawBarChartPortugal(results){
+  	var ctx = document.getElementById('myChart2').getContext('2d');
+  	var listLabelsEquipe=[];var listValues=[];
+  	for(var it=1;it<results.data.length;it++){
+  		listLabelsEquipe.push(results.data[it][2])
+  	}
+  	for(var it=1;it<results.data.length;it++){
+  		listValues.push(results.data[it][3])
+  	}
+  	$('#statsE2').html('moyenne:'+jStat.mean(listValues).toFixed(1)+' - min:'+jStat.min(listValues));
+
+	var chart = new Chart(ctx, {
+	    // The type of chart we want to create
+	    type: 'horizontalBar',
+
+	    // The data for our dataset
+	    data: {
+	        labels: listLabelsEquipe,
+	        datasets: [{
+	            label: 'note de match',
+	            backgroundColor: '#0B3B0B',
+	            borderColor: '#0B3B0B',
+	            data: listValues
+	        }]
+	    },
+
+	    // Configuration options go here
+	    options: {
+	    	 scales: {
+		        xAxes: [{
+		            ticks: {
+		                beginAtZero: true
+		            }
+		        }]
+		    }
+	    }
+	});
+  }
+</script>
 </body>
 </html>
