@@ -14,7 +14,17 @@
 html{font-family: Verdana;background:url('https://images.pexels.com/photos/46792/the-ball-stadion-football-the-pitch-46792.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');}
 table{border:1px solid black;border-radius:0.5em;background: #E6E6E6;}
 td{border:1px solid black;background: #FFF;text-align: center;}
-.outerdiv1,.outerdiv2{background: #FFF;}
+.outerdiv1{
+	width:45%;float:left;border:1px solid black;margin:1em 0 3em 0;background: #FFF;
+}
+.outerdiv2{width:45%;float:left;border:1px solid black;margin:1em 0 3em 2em;background: #FFF;}
+@media (max-width: 768px) {
+.outerdiv1{
+	width:100%;float:left;border:1px solid black;margin:1em 0 3em 0;background: #FFF;
+}
+.outerdiv2{width:100%;float:left;border:1px solid black;margin:1em 0 3em 2em;background: #FFF;}
+
+}
 </style>
 </head>
 
@@ -23,10 +33,10 @@ td{border:1px solid black;background: #FFF;text-align: center;}
 <h2 style="text-align:center;font-size:3em;margin:-0.5em 0 0 0;">Score finale: 2 - 1</h2>
 <div class="row" id="parsed_csv_list">
 </div>
-<div class="outerdiv1" style="width:45%;float:left;border:1px solid black;margin:1em 0 3em 0"><img src="https://flagpedia.net/data/flags/w580/mf.webp" style="width:10em;height:5em;margin:0 2em 0 5em"/><div id="statsE1" style="display:inline;"></div>
+<div class="outerdiv1" ><img src="https://flagpedia.net/data/flags/w580/mf.webp" style="width:10em;height:5em;margin:0 2em 0 5em"/><div id="statsE1" style="display:inline;"></div>
 	<canvas id="myChart1"></canvas>
 </div>
-<div class="outerdiv2" style="width:45%;float:left;border:1px solid black;margin:1em 0 3em 2em"><img src="https://flagpedia.net/data/flags/w580/hr.webp" style="width:10em;height:5em;margin:0 2em 0 5em"/><div id="statsE2" style="display:inline;"></div>
+<div class="outerdiv2" ><img src="https://flagpedia.net/data/flags/w580/hr.webp" style="width:10em;height:5em;margin:0 2em 0 5em"/><div id="statsE2" style="display:inline;"></div>
 	<canvas id="myChart2"></canvas>
 </div>
   <script type="text/javascript">
